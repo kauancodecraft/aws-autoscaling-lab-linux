@@ -1,0 +1,46 @@
+#!/bin/bash
+# Script de inicialização para o Servidor Web
+
+# Atualizar pacotes
+yum update -y
+
+# Instalar Apache e PHP
+yum install -y httpd php
+
+# Iniciar e habilitar o Apache
+systemctl start httpd
+systemctl enable httpd
+
+# Criar aplicação web simples para teste de carga
+cat <<EOF > /var/www/html/index.php
+<?php
+  \$output = "";
+  if (isset($_GET['stress'])) {
+    // Simular carga de CPU
+    for (\$i = 0; \$i < 10000000; \$i++) {
+      \$a = sqrt(\$i);
+    }
+    \$output = "Estresse finalizado.";
+  }
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AWS Auto Scaling Test</title>
+</head>
+<body>
+    <h1>Servidor Web Ativo</h1>
+    <p>Hostname: <?php echo gethostname(); ?></p>
+    <form action="index.php" method="GET">
+        <input type="hidden" name="stress" value="1">
+        <button type="submit">Iniciar Estresse</button>
+    </form>
+    <p><?php echo \$output; ?></p>
+</body>
+</html>
+EOF
+
+# Limpeza de segurança (conforme o laboratório)
+find / -wholename /root/.*history -wholename /home/*/.*history -exec rm -f {} \;
+find / -name 'authorized_keys' -exec rm -f {} \;
+rm -rf /var/lib/cloud/data/scripts/*
