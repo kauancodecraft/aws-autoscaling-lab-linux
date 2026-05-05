@@ -13,6 +13,8 @@ O objetivo deste projeto é demonstrar como criar uma arquitetura de alta dispon
 
 ## 🏗️ Arquitetura
 
+![Diagrama de Arquitetura AWS](./assets/architecture.png)
+
 A arquitetura final consiste em:
 - Um **Application Load Balancer** em sub-redes públicas.
 - Um **Auto Scaling Group** gerenciando instâncias EC2 em sub-redes privadas.
